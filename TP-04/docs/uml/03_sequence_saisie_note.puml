@@ -1,0 +1,36 @@
+@startuml
+title Diagramme de sequence - Saisie d'une note
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam dpi 130
+skinparam roundcorner 8
+skinparam ArrowColor #34495E
+skinparam backgroundColor white
+actor "Enseignant /\nAdministrateur" as U
+participant "Menu\n(console)" as M
+participant "Departement" as D
+participant "Etudiant" as E
+participant "Niveau" as N
+
+U -> M : choisir "Saisir une note"
+M -> U : demander matricule, matiere, note
+U -> M : ETU001, INF101, 14
+M -> D : enregistrerNote(matricule, codeMatiere, valeur)
+D -> E : trouverEtudiant(matricule)
+alt etudiant introuvable
+  D --> M : false ("etudiant introuvable")
+else etudiant trouve
+  D -> N : trouverMatiere(codeMatiere)
+  alt matiere absente du niveau
+    D --> M : false ("matiere hors niveau")
+  else matiere valide
+    alt note hors [0 ; 20]
+      D --> M : false ("note invalide")
+    else note valide
+      D -> D : creer ou mettre a jour la Note
+      D --> M : true
+    end
+  end
+end
+M --> U : afficher [OK] ou [Erreur]
+@enduml

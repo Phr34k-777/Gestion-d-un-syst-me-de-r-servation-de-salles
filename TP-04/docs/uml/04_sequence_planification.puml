@@ -1,0 +1,36 @@
+@startuml
+title Diagramme de sequence - Planification d'une seance
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam dpi 130
+skinparam roundcorner 8
+skinparam ArrowColor #34495E
+skinparam backgroundColor white
+actor "Responsable\nadministratif" as U
+participant "Menu\n(console)" as M
+participant "Departement" as D
+participant "EmploiDuTemps" as T
+participant "Seance" as S
+
+U -> M : choisir "Planifier une seance"
+U -> M : filiere, niveau, matiere, salle, jour, horaires
+M -> D : planifierSeance(...)
+D -> D : verifier niveau, matiere,\nenseignant, salle, jour, horaires
+D -> D : verifier capacite salle >= effectif du groupe
+alt donnees invalides
+  D --> M : false (motif)
+else donnees valides
+  D -> S : <<create>> Seance(...)
+  D -> T : detecterConflit(seance)
+  T -> S : chevauche(autre seance)
+  alt conflit (salle, enseignant ou groupe)
+    T --> D : motif du conflit
+    D --> M : false ("conflit : ...")
+  else aucun conflit
+    T --> D : ""
+    D -> T : ajouter(seance)
+    D --> M : true
+  end
+end
+M --> U : afficher [OK] ou [Erreur]
+@enduml

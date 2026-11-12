@@ -1,0 +1,25 @@
+@startuml
+title Diagramme de deploiement
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam dpi 130
+skinparam roundcorner 8
+skinparam ArrowColor #34495E
+skinparam backgroundColor white
+node "Poste de travail de l'administration\n(Windows / Linux / macOS)" as PC {
+  node "Systeme d'exploitation" as OS {
+    artifact "tp4 (executable C++17)" as EXE
+    node "Terminal / Console" as TERM
+  }
+  folder "Repertoire de travail" as DIR {
+    database "data/*.csv\n(filieres, niveaux, ues, matieres,\nenseignants, etudiants, salles,\nnotes, seances)" as CSV
+    folder "releves/*.txt" as REL
+  }
+}
+actor "Utilisateur" as U
+
+U --> TERM : clavier / ecran
+TERM --> EXE : stdin / stdout
+EXE --> CSV : lecture / ecriture
+EXE --> REL : export des releves
+@enduml

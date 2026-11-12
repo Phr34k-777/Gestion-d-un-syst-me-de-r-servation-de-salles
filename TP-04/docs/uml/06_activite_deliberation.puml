@@ -1,0 +1,39 @@
+@startuml
+title Diagramme d'activites - Processus de deliberation
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam dpi 130
+skinparam roundcorner 8
+skinparam ArrowColor #34495E
+skinparam backgroundColor white
+skinparam activity {
+  BackgroundColor #EAF2FB
+  BorderColor #2E86C1
+}
+start
+:Selectionner filiere et niveau;
+if (Groupe existant ?) then (non)
+  :Afficher une erreur;
+  stop
+else (oui)
+endif
+:Lister les etudiants du groupe;
+while (Etudiant suivant ?) is (oui)
+  :Calculer la moyenne de chaque UE;
+  if (Toutes les notes sont saisies ?) then (non)
+    :Decision = En attente\n(notes manquantes);
+  else (oui)
+    :Calculer moyenne generale\net credits valides;
+    if (Credits valides = credits totaux ?) then (oui)
+      :Decision = Admis;
+    elseif (Moyenne generale >= 10 ?) then (oui)
+      :Decision = Admis par compensation;
+    else (non)
+      :Decision = Ajourne;
+    endif
+  endif
+endwhile (non)
+:Classer les etudiants par moyenne decroissante;
+:Editer le PV de deliberation\n(rang, moyenne, credits, decision, taux de reussite);
+stop
+@enduml

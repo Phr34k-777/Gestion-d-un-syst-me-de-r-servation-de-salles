@@ -1,0 +1,37 @@
+@startuml
+title Diagramme de composants
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam dpi 130
+skinparam roundcorner 8
+skinparam ArrowColor #34495E
+skinparam backgroundColor white
+skinparam component {
+  BackgroundColor #EAF2FB
+  BorderColor #2E86C1
+}
+
+package "Application C++ (main.cpp)" {
+  component "Interface console\n(namespace Menu)" as UI
+  component "Gestion academique\n(Filiere, Niveau, UE, Matiere,\nEtudiant, Enseignant)" as ACAD
+  component "Gestion du planning\n(Salle, Seance, EmploiDuTemps)" as PLAN
+  component "Gestion des resultats\n(Note, Bilan, releves, deliberation)" as RES
+  component "Facade metier\n(Departement)" as CORE
+  component "Persistance CSV\n(sauvegarder / charger)" as PERS
+  component "Outils\n(saisies, heures, CSV)" as OUT
+}
+
+database "Fichiers CSV\n(data/)" as CSV
+folder "Releves texte\n(releves/)" as TXT
+
+UI --> CORE
+UI --> OUT
+CORE --> ACAD
+CORE --> PLAN
+CORE --> RES
+CORE --> PERS
+PERS --> CSV : lecture / ecriture
+RES --> TXT : export des releves
+PLAN ..> ACAD : matieres, enseignants
+RES ..> ACAD : UE, coefficients
+@enduml

@@ -1,0 +1,56 @@
+@startuml
+title Diagramme global de cas d'utilisation
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam dpi 130
+skinparam roundcorner 8
+skinparam ArrowColor #34495E
+skinparam backgroundColor white
+skinparam actorStyle awesome
+skinparam usecase {
+  BackgroundColor #EAF2FB
+  BorderColor #2E86C1
+}
+left to right direction
+
+actor "Responsable\nadministratif" as Admin
+actor "Enseignant" as Ens
+actor "Etudiant" as Etu
+actor "Jury" as Jury
+
+rectangle "Systeme de gestion du departement" {
+  usecase "Gerer les etudiants" as UC1
+  usecase "Gerer les enseignants" as UC2
+  usecase "Gerer filieres et niveaux" as UC3
+  usecase "Gerer les UE" as UC4
+  usecase "Gerer les matieres" as UC5
+  usecase "Gerer les salles" as UC6
+  usecase "Planifier une seance" as UC7
+  usecase "Detecter les conflits horaires" as UC8
+  usecase "Consulter l'emploi du temps" as UC9
+  usecase "Saisir les notes" as UC10
+  usecase "Calculer moyennes et credits" as UC11
+  usecase "Produire un releve de notes" as UC12
+  usecase "Deliberer" as UC13
+  usecase "Sauvegarder / charger (CSV)" as UC14
+}
+
+Admin --> UC1
+Admin --> UC2
+Admin --> UC3
+Admin --> UC4
+Admin --> UC5
+Admin --> UC6
+Admin --> UC7
+Admin --> UC14
+Ens --> UC10
+Ens --> UC9
+Etu --> UC9
+Etu --> UC12
+Jury --> UC13
+Admin --> UC12
+
+UC7 ..> UC8 : <<include>>
+UC12 ..> UC11 : <<include>>
+UC13 ..> UC11 : <<include>>
+@enduml

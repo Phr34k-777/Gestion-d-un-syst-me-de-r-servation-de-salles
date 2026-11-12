@@ -1,0 +1,123 @@
+@startuml
+title Diagramme de classes complet
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam dpi 130
+skinparam roundcorner 8
+skinparam ArrowColor #34495E
+skinparam backgroundColor white
+skinparam classAttributeIconSize 0
+skinparam class {
+  BackgroundColor #FDFEFE
+  BorderColor #2E86C1
+}
+hide empty members
+
+class Departement {
+  - nom : string
+  - prochainIdSeance : int
+  + ajouterEtudiant()
+  + supprimerEtudiant()
+  + ajouterEnseignant()
+  + ajouterSalle()
+  + enregistrerNote()
+  + planifierSeance()
+  + annulerSeance()
+  + calculerBilan()
+  + afficherReleve()
+  + deliberer()
+  + sauvegarder()
+  + charger()
+}
+
+class Filiere {
+  - code : string
+  - nom : string
+  + ajouterNiveau()
+  + trouverNiveau()
+}
+class Niveau {
+  - code : string
+  - libelle : string
+  + ajouterUE()
+  + trouverMatiere()
+}
+class UE {
+  - code : string
+  - intitule : string
+  - credits : int
+  + ajouterMatiere()
+}
+class Matiere {
+  - code : string
+  - intitule : string
+  - coefficient : double
+  - volumeHoraire : int
+  - idEnseignant : int
+}
+class Enseignant {
+  - id : int
+  - nom : string
+  - prenom : string
+  - grade : string
+}
+class Etudiant {
+  - matricule : string
+  - nom : string
+  - prenom : string
+  - codeFiliere : string
+  - codeNiveau : string
+}
+class Note {
+  - matricule : string
+  - codeMatiere : string
+  - valeur : double
+}
+class Salle {
+  - numero : string
+  - capacite : int
+  - categorie : string
+}
+class Seance {
+  - id : int
+  - jour : string
+  - debut : int
+  - fin : int
+  + chevauche() : bool
+}
+class EmploiDuTemps {
+  + ajouter()
+  + supprimer()
+  + detecterConflit() : string
+}
+class Bilan <<resultat>> {
+  moyenneGenerale : double
+  creditsValides : int
+  creditsTotal : int
+  decision : string
+}
+class ResultatUE <<resultat>> {
+  moyenne : double
+  validee : bool
+}
+
+Departement "1" o-- "*" Filiere
+Departement "1" o-- "*" Enseignant
+Departement "1" o-- "*" Etudiant
+Departement "1" o-- "*" Salle
+Departement "1" o-- "*" Note
+Departement "1" *-- "1" EmploiDuTemps
+Filiere "1" *-- "*" Niveau
+Niveau "1" *-- "*" UE
+UE "1" *-- "*" Matiere
+Matiere "*" --> "1" Enseignant : responsable
+Etudiant "*" --> "1" Niveau : inscrit en
+Note "*" --> "1" Etudiant
+Note "*" --> "1" Matiere
+EmploiDuTemps "1" *-- "*" Seance
+Seance "*" --> "1" Matiere
+Seance "*" --> "1" Salle
+Seance "*" --> "1" Enseignant
+Departement ..> Bilan : calcule
+Bilan "1" *-- "*" ResultatUE
+@enduml
