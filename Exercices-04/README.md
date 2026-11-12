@@ -72,3 +72,5 @@ La fonction `main()` exécute automatiquement une batterie de tests démontrant 
 * **Modélisation UML** : Associations, multiplicités, diagrammes de cas d'utilisation, de classes et de séquence.
 * **Programmation Orientée Objet (C++)** : Encapsulation, classes énumérées (`enum class`), listes d'initialisation, méthodes constantes (`const`).
 * **STL (Standard Template Library)** : Manipulation dynamique avec `std::vector` et algorithmes (`std::remove_if`).
+
+### BOTON Himbigbé Désiré
