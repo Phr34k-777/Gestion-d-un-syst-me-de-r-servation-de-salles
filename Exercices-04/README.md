@@ -73,4 +73,5 @@ La fonction `main()` exécute automatiquement une batterie de tests démontrant 
 * **Programmation Orientée Objet (C++)** : Encapsulation, classes énumérées (`enum class`), listes d'initialisation, méthodes constantes (`const`).
 * **STL (Standard Template Library)** : Manipulation dynamique avec `std::vector` et algorithmes (`std::remove_if`).
 
-### BOTON Himbigbé Désiré
+Auteur : [BOTON H. Désiré](https://github.com/Phr34k-777)
+
