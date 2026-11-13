@@ -151,7 +151,14 @@ Quatre acteurs interagissent avec le système : le **responsable administratif**
 
 ### 4.6 Diagramme de déploiement
 
+#### Exemple 1
+
 ![Diagramme de déploiement](docs/images/08_deploiement.png)
+
+#### Exemple 2
+
+![Diagramme de déploiement](docs/imgs/deploiement.png)
+
 
 ### 4.7 Régénérer les images
 
