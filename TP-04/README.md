@@ -317,3 +317,5 @@ Les données de démonstration (option 17 ou premier lancement) comprennent :
 * La saisie des filières, niveaux, UE et matières se fait par les données de démonstration ou par édition des fichiers CSV ; le menu ne couvre pas encore leur création.
 * Une seule session de notes par matière (pas de rattrapage).
 * Pistes : session de rattrapage, gestion des semestres, export PDF des relevés, interface graphique, base de données (SQLite) à la place des CSV.
+
+Auteur : [BOTON H. Désiré](https://github.com/Phr34k-777)

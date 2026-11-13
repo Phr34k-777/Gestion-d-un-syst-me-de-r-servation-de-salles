@@ -1,13 +1,3 @@
-/*
- * TP 4 - Systeme integre de gestion d'un departement universitaire
- * ---------------------------------------------------------------
- * Application console C++17 : etudiants, enseignants, filieres/niveaux,
- * UE, matieres, salles, emplois du temps, notes, moyennes, credits,
- * releves de notes et deliberation. Persistance en fichiers CSV.
- *
- * Compilation : g++ -std=c++17 -Wall -Wextra -o tp4 main.cpp
- */
-
 #include <algorithm>
 #include <cstdio>
 #include <filesystem>
