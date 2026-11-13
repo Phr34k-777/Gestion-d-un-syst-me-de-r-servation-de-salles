@@ -1,4 +1,4 @@
-# TP 4 — Système intégré de gestion d'un département universitaire
+# TP 4 - Système intégré de gestion d'un département universitaire
 
 > Application console en **C++17** pour centraliser la gestion pédagogique et administrative d'un département universitaire : étudiants, enseignants, filières, UE, matières, salles, emplois du temps, notes, relevés et délibération.
 > Modélisation UML réalisée avec **PlantUML**. Persistance initiale en fichiers **CSV**.
