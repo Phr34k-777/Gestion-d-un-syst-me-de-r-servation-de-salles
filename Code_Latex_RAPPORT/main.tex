@@ -1,0 +1,756 @@
+\documentclass[12pt,a4paper]{report}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{lmodern}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage[table]{xcolor}
+
+% ---------- Palette de couleurs ----------
+\definecolor{univblue}{RGB}{0,51,102}
+\definecolor{univgold}{RGB}{200,155,40}
+\definecolor{headcol}{RGB}{214,226,242}
+\definecolor{codebg}{RGB}{246,248,252}
+\usepackage{listings}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage[font=small,labelfont={bf,color=univblue},labelsep=period]{caption}
+\usepackage{hyperref}
+\usepackage{setspace}
+
+\hypersetup{colorlinks=true,linkcolor=univblue,urlcolor=univgold!70!black,citecolor=univblue}
+\setstretch{1.15}
+
+% ---------- Auteur (utilisé en pied de page et sur la page de garde) ----------
+\newcommand{\auteur}{BOTON H. Désiré}
+
+% ---------- Mise en forme des titres ----------
+\titleformat{\chapter}[display]
+  {\normalfont\bfseries\color{univblue}}
+  {\filleft\large\scshape\chaptertitlename\ \Huge\thechapter}
+  {1ex}
+  {\titlerule[2pt]\vspace{1.5ex}\filright\Huge}
+  [\vspace{1ex}{\color{univgold}\titlerule[1pt]}]
+\titlespacing*{\chapter}{0pt}{-20pt}{30pt}
+\titleformat{\section}{\normalfont\Large\bfseries\color{univblue}}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalfont\large\bfseries\color{univblue!80!black}}{\thesubsection}{1em}{}
+\titleformat{\paragraph}[runin]{\normalfont\bfseries\color{univgold!75!black}}{\theparagraph}{1em}{}
+\titlespacing*{\paragraph}{0pt}{1.5ex}{1em}
+
+% ---------- En-têtes et pieds de page ----------
+\setlength{\headheight}{15pt}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{univblue}\leftmark}
+\fancyhead[R]{\small\color{univblue}Gestion de réservation de salles}
+\fancyfoot[L]{\small\color{univblue}\auteur}
+\fancyfoot[R]{\small\color{univblue}\thepage}
+\renewcommand{\headrule}{{\color{univgold}\hrule width\headwidth height 0.8pt}}
+\renewcommand{\footrule}{{\color{univblue}\hrule width\headwidth height 0.4pt}}
+\renewcommand{\footrulewidth}{0.4pt}
+\fancypagestyle{plain}{%
+  \fancyhf{}
+  \fancyfoot[L]{\small\color{univblue}\auteur}
+  \fancyfoot[R]{\small\color{univblue}\thepage}
+  \renewcommand{\headrulewidth}{0pt}
+}
+
+% ---------- Puces et numérotation colorées ----------
+\renewcommand{\labelitemi}{\textcolor{univgold}{\textbullet}}
+\renewcommand{\labelenumi}{\textcolor{univblue}{\textbf{\theenumi.}}}
+
+% ---------- Style du code C++ ----------
+\lstdefinestyle{cppstyle}{
+  language=C++,
+  basicstyle=\ttfamily\footnotesize,
+  keywordstyle=\color{blue!70!black}\bfseries,
+  commentstyle=\color{green!40!black}\itshape,
+  stringstyle=\color{red!60!black},
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  frame=single,
+  rulecolor=\color{univblue},
+  backgroundcolor=\color{codebg},
+  breaklines=true,
+  tabsize=2,
+  showstringspaces=false,
+  captionpos=b
+}
+\lstdefinestyle{plain}{
+  basicstyle=\ttfamily\footnotesize,
+  frame=single,
+  rulecolor=\color{univblue},
+  backgroundcolor=\color{codebg},
+  breaklines=true,
+  captionpos=b
+}
+
+% ---------- Macro pour insérer une image de diagramme ----------
+% Usage : \diagramme{fichier}{largeur}{légende}{label}
+% Si l'image n'existe pas encore, un cadre vide s'affiche (le document compile quand même).
+\newcommand{\diagramme}[4]{%
+  \begin{figure}[H]
+    \centering
+    \IfFileExists{#1}{%
+      \includegraphics[width=#2\textwidth]{#1}%
+    }{%
+      \fcolorbox{univblue}{headcol!40}{\parbox[c][6cm][c]{0.8\textwidth}{\centering
+        \textit{Image à insérer :}\\ \texttt{\detokenize{#1}}}}%
+    }
+    \caption{#3}
+    \label{#4}
+  \end{figure}
+}
+
+% ---------- Macro pour insérer un logo ----------
+% Usage : \logo{fichier}{hauteur}
+\newcommand{\logo}[2]{%
+  \IfFileExists{#1}{%
+    \includegraphics[height=#2]{#1}%
+  }{%
+    \fcolorbox{univblue}{headcol!40}{\parbox[c][#2][c]{#2}{\centering\scriptsize\textit{Logo}\\\texttt{\detokenize{#1}}}}%
+  }%
+}
+
+\begin{document}
+
+% ====================== PAGE DE GARDE ======================
+\begin{titlepage}
+  \centering
+  \noindent
+  \begin{minipage}[c]{0.45\textwidth}\raggedright
+    \logo{images/unstim.png}{2.8cm}
+  \end{minipage}\hfill
+  \begin{minipage}[c]{0.45\textwidth}\raggedleft
+    \logo{images/fast.jpg}{2.8cm}
+  \end{minipage}\par
+  \vspace{1cm}
+  {\color{univblue}\large \textsc{Département de Mathématique et d'Informatique}\par}
+  \vspace{0.5cm}
+  {\color{univblue}\large Année universitaire 2026--2027\par}
+  \vspace{3cm}
+  {\color{univgold}\rule{\textwidth}{2pt}}\\[0.6cm]
+  {\Huge \bfseries \color{univblue} Gestion d'un système\\[0.3cm] de réservation de salles\par}
+  {\color{univgold}\rule{\textwidth}{2pt}}\\[1cm]
+  {\Large \color{univgold!75!black} Modélisation UML et implémentation en C++\par}
+  \vspace{3cm}
+  {\large \textbf{\color{univblue}Réalisé par :}\par}
+  \vspace{0.3cm}
+  {\Large \auteur\par}
+  \vspace{0.3cm}
+  {\large Matricule : 11052STI23{\hspace{4cm}}\par}
+  \vfill
+  {\large \today\par}
+\end{titlepage}
+
+\tableofcontents
+\listoffigures
+
+% ====================== INTRODUCTION ======================
+\chapter*{Introduction}
+\addcontentsline{toc}{chapter}{Introduction}\markboth{Introduction}{Introduction}
+
+Un département universitaire dispose de plusieurs salles utilisées pour les
+cours, les travaux dirigés (TD) et les soutenances. Chaque salle est
+caractérisée par un numéro, une capacité et une catégorie. Les enseignants
+réservent ces salles pour des dates et des créneaux horaires précis.
+
+La contrainte métier principale est la suivante : \textbf{une salle ne peut pas
+être réservée par deux enseignants pour le même créneau}.
+
+Ce rapport présente la démarche de conception orientée objet : identification
+des classes, diagrammes UML (cas d'utilisation, classes, séquence), puis
+implémentation en C++ des fonctionnalités de vérification de disponibilité,
+d'enregistrement et d'annulation de réservations, avec rejet des réservations
+conflictuelles.
+
+% ====================== CHAPITRE 1 ======================
+\chapter{Analyse du besoin}
+
+\section{Acteurs}
+\begin{itemize}
+  \item \textbf{Enseignant} : consulte les disponibilités, réserve une salle et annule ses propres réservations.
+  \item \textbf{Administrateur} : gère le parc de salles (ajout, modification, suppression) et peut consulter toutes les réservations.
+\end{itemize}
+
+\section{Besoins fonctionnels}
+\begin{enumerate}
+  \item Consulter la liste des salles et leurs caractéristiques.
+  \item Vérifier la disponibilité d'une salle pour une date et un créneau.
+  \item Enregistrer une réservation.
+  \item Annuler une réservation.
+  \item Consulter les réservations existantes.
+  \item Gérer les salles (administrateur).
+\end{enumerate}
+
+\section{Règles de gestion}
+\begin{itemize}
+  \item[\textbf{R1}] Une salle ne peut pas être réservée par deux enseignants pour deux créneaux qui se chevauchent le même jour.
+  \item[\textbf{R2}] Un créneau est valide si l'heure de début est strictement inférieure à l'heure de fin.
+  \item[\textbf{R3}] Le nombre de participants ne doit pas dépasser la capacité de la salle.
+  \item[\textbf{R4}] Seul l'enseignant ayant effectué une réservation peut l'annuler.
+  \item[\textbf{R5}] Une salle appartient à une seule catégorie : cours, travaux dirigés ou soutenance.
+\end{itemize}
+
+% ====================== CHAPITRE 2 ======================
+\chapter{Identification des classes}
+
+L'analyse du texte (noms communs du domaine) conduit aux classes suivantes.
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}l p{4.6cm} p{6cm}@{}}
+\toprule
+\rowcolor{headcol}\textbf{Classe} & \textbf{Attributs} & \textbf{Responsabilité} \\
+\midrule
+\texttt{Salle} & numéro, capacité, catégorie & Représenter une salle et ses caractéristiques. \\
+\texttt{Categorie} (énumération) & COURS, TRAVAUX\_DIRIGES, SOUTENANCE & Typer l'usage d'une salle. \\
+\texttt{Enseignant} & identifiant, nom, prénom & Représenter l'utilisateur qui réserve. \\
+\texttt{Creneau} & date, heure de début, heure de fin & Représenter une plage horaire et détecter les chevauchements. \\
+\texttt{Reservation} & identifiant, nombre de participants, motif & Associer une salle, un enseignant et un créneau. \\
+\texttt{GestionnaireReservations} & collections de salles, enseignants et réservations & Appliquer les règles métier : disponibilité, réservation, annulation. \\
+\texttt{ConflitReservation} (exception) & message & Signaler une violation de la règle R1. \\
+\bottomrule
+\end{tabular}
+\caption{Classes identifiées}
+\end{table}
+
+% ====================== CHAPITRE 3 ======================
+\chapter{Modélisation UML}
+
+\section{Diagramme de cas d'utilisation}
+
+Le diagramme de la figure~\ref{fig:usecase} présente les interactions entre les acteurs et le système.
+
+\diagramme{images/02_cas_utilisation.png}{0.9}{Diagramme de cas d'utilisation}{fig:usecase}
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}l p{9cm}@{}}
+\toprule
+\rowcolor{headcol}\textbf{Cas d'utilisation} & \textbf{Description} \\
+\midrule
+Consulter les salles & L'enseignant affiche les salles avec capacité et catégorie. \\
+Vérifier la disponibilité & Le système indique si la salle est libre sur le créneau demandé. \\
+Réserver une salle & Inclut « Vérifier la disponibilité » ; échoue en cas de conflit. \\
+Annuler une réservation & Supprime une réservation appartenant à l'enseignant. \\
+Gérer les salles & L'administrateur ajoute ou supprime des salles. \\
+\bottomrule
+\end{tabular}
+\caption{Description des cas d'utilisation}
+\end{table}
+
+\section{Diagramme de classes}
+
+La figure~\ref{fig:classes} présente le diagramme de classes UML.
+
+\diagramme{images/02_classes.png}{1.0}{Diagramme de classes UML}{fig:classes}
+
+\subsection*{Associations et multiplicités}
+
+\begin{itemize}
+  \item \texttt{Enseignant} \textbf{1} --- \textbf{0..*} \texttt{Reservation} : un enseignant effectue zéro ou plusieurs réservations ; une réservation est effectuée par un seul enseignant.
+  \item \texttt{Salle} \textbf{1} --- \textbf{0..*} \texttt{Reservation} : une salle peut être réservée plusieurs fois (sur des créneaux différents) ; une réservation concerne une seule salle.
+  \item \texttt{Reservation} \textbf{1} --- \textbf{1} \texttt{Creneau} : composition ; le créneau n'existe que dans la réservation.
+  \item \texttt{Salle} \textbf{*} --- \texttt{Categorie} \textbf{1} : chaque salle a une unique catégorie.
+  \item \texttt{GestionnaireReservations} \textbf{1} --- \textbf{0..*} \texttt{Salle}, \texttt{Enseignant}, \texttt{Reservation} : le gestionnaire conserve les collections d'objets.
+\end{itemize}
+
+\section{Diagramme de séquence : réservation d'une salle}
+
+La figure~\ref{fig:sequence} illustre le scénario de réservation, avec le cas nominal et le cas de conflit.
+
+\diagramme{images/inscription.png}{1.0}{Diagramme de séquence : réservation d'une salle}{fig:sequence}
+
+\paragraph{Déroulement.}
+\begin{enumerate}
+  \item L'enseignant demande une réservation (salle, créneau, participants, motif).
+  \item Le gestionnaire recherche la salle et l'enseignant.
+  \item Il vérifie la capacité (R3).
+  \item Il parcourt les réservations de la salle et appelle \texttt{Creneau::chevauche()} (R1).
+  \item \textbf{Alternative} : si un chevauchement existe, une exception \texttt{ConflitReservation} est levée et rien n'est enregistré ; sinon, la réservation est créée, ajoutée à la collection et son identifiant est retourné.
+\end{enumerate}
+
+% ====================== CHAPITRE 4 ======================
+\chapter{Implémentation en C++}
+
+\section{Choix de conception}
+
+\begin{itemize}
+  \item \textbf{Encapsulation} : tous les attributs sont privés, accessibles par des accesseurs ; les invariants (créneau valide, capacité positive) sont vérifiés dans les constructeurs.
+  \item \textbf{Collections} : \texttt{std::vector} de \texttt{std::shared\_ptr} pour les salles, enseignants et réservations.
+  \item \textbf{Contraintes métier} : centralisées dans \texttt{GestionnaireReservations} et signalées par des exceptions.
+  \item \textbf{Détection de chevauchement} : deux créneaux $[d_1, f_1[$ et $[d_2, f_2[$ du même jour se chevauchent si et seulement si $d_1 < f_2$ et $d_2 < f_1$. Ainsi, deux créneaux consécutifs (10h--12h et 12h--14h) ne sont pas en conflit.
+\end{itemize}
+
+\section{Code source}
+
+\subsection{Énumération \texttt{Categorie} et classe \texttt{Salle}}
+\begin{lstlisting}[style=cppstyle]
+#include <algorithm>
+#include <iostream>
+#include <memory>
+#include <stdexcept>
+#include <string>
+#include <vector>
+
+enum class Categorie { COURS, TRAVAUX_DIRIGES, SOUTENANCE };
+
+inline std::string categorieVersTexte(Categorie c) {
+    switch (c) {
+        case Categorie::COURS:           return "Cours";
+        case Categorie::TRAVAUX_DIRIGES: return "Travaux diriges";
+        case Categorie::SOUTENANCE:      return "Soutenance";
+    }
+    return "Inconnue";
+}
+
+class Salle {
+private:
+    std::string numero;
+    int capacite;
+    Categorie categorie;
+
+public:
+    Salle(const std::string& numero, int capacite, Categorie categorie)
+        : numero(numero), capacite(capacite), categorie(categorie) {
+        if (numero.empty())
+            throw std::invalid_argument("Numero de salle vide");
+        if (capacite <= 0)
+            throw std::invalid_argument("Capacite invalide");
+    }
+
+    const std::string& getNumero() const { return numero; }
+    int getCapacite() const { return capacite; }
+    Categorie getCategorie() const { return categorie; }
+
+    void afficher() const {
+        std::cout << "Salle " << numero << " | capacite : " << capacite
+                  << " | categorie : " << categorieVersTexte(categorie) << "\n";
+    }
+};
+\end{lstlisting}
+
+\subsection{Classe \texttt{Enseignant}}
+\begin{lstlisting}[style=cppstyle]
+class Enseignant {
+private:
+    int id;
+    std::string nom;
+    std::string prenom;
+
+public:
+    Enseignant(int id, const std::string& nom, const std::string& prenom)
+        : id(id), nom(nom), prenom(prenom) {}
+
+    int getId() const { return id; }
+    const std::string& getNom() const { return nom; }
+    const std::string& getPrenom() const { return prenom; }
+    std::string nomComplet() const { return prenom + " " + nom; }
+};
+\end{lstlisting}
+
+\subsection{Classe \texttt{Creneau}}
+\begin{lstlisting}[style=cppstyle]
+class Creneau {
+private:
+    std::string date;   // format AAAA-MM-JJ
+    int heureDebut;     // 0..24
+    int heureFin;       // 0..24
+
+public:
+    Creneau(const std::string& date, int heureDebut, int heureFin)
+        : date(date), heureDebut(heureDebut), heureFin(heureFin) {
+        if (heureDebut < 0 || heureFin > 24 || heureDebut >= heureFin)
+            throw std::invalid_argument("Creneau invalide");
+    }
+
+    const std::string& getDate() const { return date; }
+    int getHeureDebut() const { return heureDebut; }
+    int getHeureFin() const { return heureFin; }
+
+    // Vrai si les deux creneaux ont lieu le meme jour et se superposent
+    bool chevauche(const Creneau& autre) const {
+        return date == autre.date &&
+               heureDebut < autre.heureFin &&
+               autre.heureDebut < heureFin;
+    }
+
+    std::string texte() const {
+        return date + " " + std::to_string(heureDebut) + "h-" +
+               std::to_string(heureFin) + "h";
+    }
+};
+\end{lstlisting}
+
+\subsection{Classe \texttt{Reservation} et exception \texttt{ConflitReservation}}
+\begin{lstlisting}[style=cppstyle]
+class ConflitReservation : public std::runtime_error {
+public:
+    explicit ConflitReservation(const std::string& msg)
+        : std::runtime_error(msg) {}
+};
+
+class Reservation {
+private:
+    int id;
+    std::shared_ptr<Salle> salle;
+    std::shared_ptr<Enseignant> enseignant;
+    Creneau creneau;
+    int nbParticipants;
+    std::string motif;
+
+public:
+    Reservation(int id, std::shared_ptr<Salle> salle,
+                std::shared_ptr<Enseignant> enseignant,
+                const Creneau& creneau, int nbParticipants,
+                const std::string& motif)
+        : id(id), salle(salle), enseignant(enseignant), creneau(creneau),
+          nbParticipants(nbParticipants), motif(motif) {}
+
+    int getId() const { return id; }
+    const Salle& getSalle() const { return *salle; }
+    const Enseignant& getEnseignant() const { return *enseignant; }
+    const Creneau& getCreneau() const { return creneau; }
+    int getNbParticipants() const { return nbParticipants; }
+    const std::string& getMotif() const { return motif; }
+
+    void afficher() const {
+        std::cout << "Reservation #" << id << " | salle "
+                  << salle->getNumero() << " | "
+                  << enseignant->nomComplet() << " | "
+                  << creneau.texte() << " | " << motif << "\n";
+    }
+};
+\end{lstlisting}
+
+\subsection{Classe \texttt{GestionnaireReservations}}
+\begin{lstlisting}[style=cppstyle]
+class GestionnaireReservations {
+private:
+    std::vector<std::shared_ptr<Salle>> salles;
+    std::vector<std::shared_ptr<Enseignant>> enseignants;
+    std::vector<Reservation> reservations;
+    int prochainId = 1;
+
+    std::shared_ptr<Salle> trouverSalle(const std::string& numero) const {
+        for (const auto& s : salles)
+            if (s->getNumero() == numero) return s;
+        throw std::invalid_argument("Salle introuvable : " + numero);
+    }
+
+    std::shared_ptr<Enseignant> trouverEnseignant(int id) const {
+        for (const auto& e : enseignants)
+            if (e->getId() == id) return e;
+        throw std::invalid_argument("Enseignant introuvable");
+    }
+
+public:
+    void ajouterSalle(const Salle& s) {
+        for (const auto& existante : salles)
+            if (existante->getNumero() == s.getNumero())
+                throw std::invalid_argument("Numero de salle deja utilise");
+        salles.push_back(std::make_shared<Salle>(s));
+    }
+
+    void ajouterEnseignant(const Enseignant& e) {
+        enseignants.push_back(std::make_shared<Enseignant>(e));
+    }
+
+    // Verifie la disponibilite d'une salle pour un creneau
+    bool estDisponible(const std::string& numeroSalle,
+                       const Creneau& creneau) const {
+        trouverSalle(numeroSalle); // leve une exception si inexistante
+        for (const auto& r : reservations)
+            if (r.getSalle().getNumero() == numeroSalle &&
+                r.getCreneau().chevauche(creneau))
+                return false;
+        return true;
+    }
+
+    // Enregistre une reservation ; retourne son identifiant
+    int reserver(const std::string& numeroSalle, int idEnseignant,
+                 const Creneau& creneau, int nbParticipants,
+                 const std::string& motif) {
+        auto salle = trouverSalle(numeroSalle);
+        auto enseignant = trouverEnseignant(idEnseignant);
+
+        if (nbParticipants <= 0 || nbParticipants > salle->getCapacite())
+            throw std::invalid_argument(
+                "Nombre de participants superieur a la capacite");
+
+        if (!estDisponible(numeroSalle, creneau))
+            throw ConflitReservation("La salle " + numeroSalle +
+                " est deja reservee sur le creneau " + creneau.texte());
+
+        reservations.emplace_back(prochainId, salle, enseignant,
+                                  creneau, nbParticipants, motif);
+        return prochainId++;
+    }
+
+    // Annule une reservation (seul son auteur peut l'annuler)
+    void annuler(int idReservation, int idEnseignant) {
+        auto it = std::find_if(reservations.begin(), reservations.end(),
+            [&](const Reservation& r) { return r.getId() == idReservation; });
+
+        if (it == reservations.end())
+            throw std::invalid_argument("Reservation introuvable");
+        if (it->getEnseignant().getId() != idEnseignant)
+            throw std::invalid_argument(
+                "Seul l'auteur peut annuler la reservation");
+
+        reservations.erase(it);
+    }
+
+    void afficherSalles() const {
+        for (const auto& s : salles) s->afficher();
+    }
+
+    void afficherReservations() const {
+        if (reservations.empty()) std::cout << "Aucune reservation.\n";
+        for (const auto& r : reservations) r.afficher();
+    }
+};
+\end{lstlisting}
+
+\subsection{Programme principal de démonstration}
+\begin{lstlisting}[style=cppstyle]
+int main() {
+    GestionnaireReservations g;
+
+    g.ajouterSalle(Salle("A101", 60, Categorie::COURS));
+    g.ajouterSalle(Salle("B202", 30, Categorie::TRAVAUX_DIRIGES));
+    g.ajouterSalle(Salle("S01", 20, Categorie::SOUTENANCE));
+
+    g.ajouterEnseignant(Enseignant(1, "Martin", "Alice"));
+    g.ajouterEnseignant(Enseignant(2, "Durand", "Paul"));
+
+    std::cout << "--- Salles ---\n";
+    g.afficherSalles();
+
+    try {
+        // 1. Reservation valide
+        int r1 = g.reserver("A101", 1, Creneau("2026-11-20", 8, 10),
+                            45, "Cours de POO");
+        std::cout << "\nReservation " << r1 << " enregistree.\n";
+
+        // 2. Conflit : meme salle, creneau qui chevauche, autre enseignant
+        g.reserver("A101", 2, Creneau("2026-11-20", 9, 11),
+                   40, "Cours d'algorithmique");
+    } catch (const ConflitReservation& e) {
+        std::cout << "[CONFLIT] " << e.what() << "\n";
+    }
+
+    try {
+        // 3. Creneau consecutif : pas de conflit
+        int r2 = g.reserver("A101", 2, Creneau("2026-11-20", 10, 12),
+                            40, "Cours d'algorithmique");
+        std::cout << "Reservation " << r2 << " enregistree.\n";
+
+        // 4. Capacite depassee
+        g.reserver("S01", 1, Creneau("2026-11-21", 14, 16),
+                   50, "Soutenance");
+    } catch (const std::exception& e) {
+        std::cout << "[ERREUR] " << e.what() << "\n";
+    }
+
+    std::cout << "\n--- Reservations ---\n";
+    g.afficherReservations();
+
+    // 5. Annulation puis nouvelle verification de disponibilite
+    g.annuler(1, 1);
+    std::cout << "\nReservation 1 annulee.\n";
+    std::cout << "A101 libre le 2026-11-20 de 8h a 10h ? "
+              << (g.estDisponible("A101", Creneau("2026-11-20", 8, 10))
+                  ? "oui" : "non") << "\n";
+    return 0;
+}
+\end{lstlisting}
+
+\section{Compilation et exécution}
+\begin{lstlisting}[style=plain]
+g++ -std=c++17 -Wall -Wextra -o reservation main.cpp
+./reservation
+\end{lstlisting}
+
+\section{Résultat attendu}
+\begin{lstlisting}[style=plain]
+--- Salles ---
+Salle A101 | capacite : 60 | categorie : Cours
+Salle B202 | capacite : 30 | categorie : Travaux diriges
+Salle S01 | capacite : 20 | categorie : Soutenance
+
+Reservation 1 enregistree.
+[CONFLIT] La salle A101 est deja reservee sur le creneau 2026-11-20 9h-11h
+Reservation 2 enregistree.
+[ERREUR] Nombre de participants superieur a la capacite
+
+--- Reservations ---
+Reservation #1 | salle A101 | Alice Martin | 2026-11-20 8h-10h | Cours de POO
+Reservation #2 | salle A101 | Paul Durand | 2026-11-20 10h-12h | Cours d'algorithmique
+
+Reservation 1 annulee.
+A101 libre le 2026-11-20 de 8h a 10h ? oui
+\end{lstlisting}
+
+\section{Tests des contraintes métier}
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}p{5.2cm} p{4cm} p{4.4cm}@{}}
+\toprule
+\rowcolor{headcol}\textbf{Scénario} & \textbf{Règle} & \textbf{Résultat} \\
+\midrule
+Même salle, créneaux qui se chevauchent (8h--10h et 9h--11h) & R1 & Exception \texttt{ConflitReservation} \\
+Même salle, créneaux consécutifs (8h--10h et 10h--12h) & R1 & Réservation acceptée \\
+Même salle, jours différents & R1 & Réservation acceptée \\
+50 participants dans une salle de 20 places & R3 & \texttt{invalid\_argument} \\
+Annulation par un autre enseignant & R4 & \texttt{invalid\_argument} \\
+Début $\geq$ fin & R2 & \texttt{invalid\_argument} \\
+\bottomrule
+\end{tabular}
+\caption{Jeux de tests}
+\end{table}
+
+% ====================== CONCLUSION ======================
+\chapter*{Conclusion}
+\addcontentsline{toc}{chapter}{Conclusion}\markboth{Conclusion}{Conclusion}
+
+Ce travail a permis de modéliser et d'implémenter un système de réservation de
+salles. L'identification des classes et leurs associations (avec multiplicités)
+a été formalisée par trois diagrammes UML, puis traduite en C++ en respectant
+l'encapsulation et en utilisant des collections d'objets.
+
+La contrainte principale, l'interdiction des réservations conflictuelles, est
+garantie par la méthode \texttt{Creneau::chevauche()} et par le contrôle effectué
+dans \texttt{GestionnaireReservations::reserver()}.
+
+Parmi les évolutions possibles : persistance des données (fichier ou base de
+données), gestion de réservations récurrentes, interface graphique, et
+utilisation d'un type \texttt{std::chrono} pour les dates.
+
+% ====================== ANNEXE ======================
+\appendix
+\chapter{Sources PlantUML des diagrammes}
+
+Ces sources permettent de générer les images à insérer dans le rapport (site
+\url{https://www.plantuml.com/plantuml} ou extension PlantUML ou \url{https://lucid.app/}(Outile en ligne)). Enregistrer les
+images dans le dossier \texttt{images/} sous les noms \texttt{cas\_utilisation.png},
+\texttt{diagramme\_classes.png} et \texttt{diagramme\_sequence.png}.
+
+\section{Cas d'utilisation}
+\begin{lstlisting}[style=plain]
+@startuml
+left to right direction
+actor Enseignant
+actor Administrateur
+rectangle "Systeme de reservation" {
+  usecase "Consulter les salles" as UC1
+  usecase "Verifier la disponibilite" as UC2
+  usecase "Reserver une salle" as UC3
+  usecase "Annuler une reservation" as UC4
+  usecase "Consulter les reservations" as UC5
+  usecase "Gerer les salles" as UC6
+}
+Enseignant --> UC1
+Enseignant --> UC2
+Enseignant --> UC3
+Enseignant --> UC4
+Enseignant --> UC5
+Administrateur --> UC5
+Administrateur --> UC6
+UC3 .> UC2 : <<include>>
+@enduml
+\end{lstlisting}
+
+\section{Diagramme de classes}
+\begin{lstlisting}[style=plain]
+@startuml
+enum Categorie {
+  COURS
+  TRAVAUX_DIRIGES
+  SOUTENANCE
+}
+class Salle {
+  -numero : string
+  -capacite : int
+  -categorie : Categorie
+  +getNumero() : string
+  +getCapacite() : int
+  +getCategorie() : Categorie
+}
+class Enseignant {
+  -id : int
+  -nom : string
+  -prenom : string
+  +getId() : int
+  +nomComplet() : string
+}
+class Creneau {
+  -date : string
+  -heureDebut : int
+  -heureFin : int
+  +chevauche(autre : Creneau) : bool
+}
+class Reservation {
+  -id : int
+  -nbParticipants : int
+  -motif : string
+}
+class GestionnaireReservations {
+  +estDisponible(numero, creneau) : bool
+  +reserver(numero, idEns, creneau, nb, motif) : int
+  +annuler(idReservation, idEns) : void
+}
+class ConflitReservation
+Salle "*" --> "1" Categorie
+Enseignant "1" -- "0..*" Reservation : effectue
+Salle "1" -- "0..*" Reservation : concerne
+Reservation "1" *-- "1" Creneau
+GestionnaireReservations "1" o-- "0..*" Salle
+GestionnaireReservations "1" o-- "0..*" Enseignant
+GestionnaireReservations "1" o-- "0..*" Reservation
+GestionnaireReservations ..> ConflitReservation : <<throws>>
+@enduml
+\end{lstlisting}
+
+\section{Diagramme de séquence}
+\begin{lstlisting}[style=plain]
+@startuml
+actor Enseignant
+participant ":GestionnaireReservations" as G
+participant ":Salle" as S
+participant ":Reservation" as R
+participant ":Creneau" as C
+
+Enseignant -> G : reserver(numero, idEns, creneau, nb, motif)
+activate G
+G -> G : trouverSalle(numero)
+G -> S : getCapacite()
+S --> G : capacite
+G -> G : verifier capacite
+G -> G : estDisponible(numero, creneau)
+loop pour chaque reservation de la salle
+  G -> C : chevauche(autre)
+  C --> G : vrai / faux
+end
+alt conflit detecte
+  G --> Enseignant : ConflitReservation
+else salle disponible
+  G -> R ** : create(id, salle, enseignant, creneau, ...)
+  G -> G : ajouter a la collection
+  G --> Enseignant : idReservation
+end
+deactivate G
+@enduml
+\end{lstlisting}
+
+\end{document}
