@@ -96,7 +96,10 @@ Les sources PlantUML se trouvent dans [`docs/uml/`](docs/uml) et les images dans
 
 Quatre acteurs interagissent avec le système : le **responsable administratif** (gestion et planification), l'**enseignant** (notes, emploi du temps), l'**étudiant** (relevé, emploi du temps) et le **jury** (délibération).
 
-![Diagramme global de cas d'utilisation](docs/images/01_cas_utilisation.png)
+![Diagramme global de cas d'utilisation 1](docs/images/01_cas_utilisation.png)
+
+
+![Diagramme global de cas d'utilisation 2](docs/imgs/02_cas_utilisation.png)
 
 ### 4.2 Diagramme de classes complet
 
