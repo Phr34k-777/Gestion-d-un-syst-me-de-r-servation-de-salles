@@ -96,8 +96,12 @@ Les sources PlantUML se trouvent dans [`docs/uml/`](docs/uml) et les images dans
 
 Quatre acteurs interagissent avec le système : le **responsable administratif** (gestion et planification), l'**enseignant** (notes, emploi du temps), l'**étudiant** (relevé, emploi du temps) et le **jury** (délibération).
 
+#### Exemple 1
+
 ![Diagramme global de cas d'utilisation 1](docs/images/01_cas_utilisation.png)
 
+
+#### Exemple 2
 
 ![Diagramme global de cas d'utilisation 2](docs/imgs/02_cas_utilisation.png)
 
@@ -105,7 +109,15 @@ Quatre acteurs interagissent avec le système : le **responsable administratif**
 
 `Departement` joue le rôle de classe gestionnaire (façade). La hiérarchie académique est une composition : `Filiere` → `Niveau` → `UE` → `Matiere`. Les résultats de calcul (`Bilan`, `ResultatUE`) sont de simples objets de valeur.
 
+#### Exemple 1
+
 ![Diagramme de classes complet](docs/images/02_classes.png)
+
+
+#### Exemple 2
+
+![Diagramme de classes complet](docs/imgs/02_classes.png)
+
 
 ### 4.3 Diagrammes de séquence des opérations principales
 
@@ -121,9 +133,17 @@ Quatre acteurs interagissent avec le système : le **responsable administratif**
 
 ![Séquence - Production d'un relevé de notes](docs/images/05_sequence_releve.png)
 
-### 4.4 Diagramme d'activités — processus de délibération
+### 4.4 Diagramme d'activités - processus de délibération
+
+#### Exemple 1
 
 ![Diagramme d'activités - Délibération](docs/images/06_activite_deliberation.png)
+
+
+#### Exemple 2
+
+![Diagramme d'activités - Délibération](docs/imgs/inscription.png)
+
 
 ### 4.5 Diagramme de composants
 
